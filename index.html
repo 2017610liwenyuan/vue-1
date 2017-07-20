@@ -1,0 +1,68 @@
+<!DOCTYPE >
+<html>
+<head>
+<title>游戏登陆</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="../css/general.css" rel="stylesheet" type="text/css" />
+<link href="../css/main.css" rel="stylesheet" type="text/css" />
+ 
+<style type="text/css">
+body {
+  color: white;
+}
+</style>
+</head>
+<body style="background: #278296">
+<form method="post" action="login.php" name='theForm'>
+  <table cellspacing="0" cellpadding="0" style="margin-top: 100px" align="center">
+  <tr>
+    <td style="padding-left: 50px">
+      <table>
+      <tr>
+        <td align="left" colspan="2">
+        
+        </td>
+      </tr>
+      <tr>
+        <td align="right">管理员名称：</td>
+        <td><input type="text" name="username" /></td>
+      </tr>
+      <tr>
+        <td align="right">管理员密码：</td>
+        <td><input type="password" name="password" /></td>
+      </tr>
+      <tr><td>&nbsp;</td><td><input type="submit" value="登陆到管理后台" class="button" /></td></tr>
+      <tr>
+        <td colspan="1" align="right">&raquo; <a href="#" style="color:white">返回首页</a></td>
+      </tr>
+      </table>
+    </td>
+  </tr>
+  </table>
+</form>
+ 
+</body>
+
+ <?php
+$username = $_POST ['username'];
+$password = $_POST ['password'];
+if ($username == "") {
+    $error = "1";
+    Header ( "Location: index.php?error=" . $error . "" );
+} else if ($password == "") {
+    $error = "2";
+    Header ( "Location: index.php?error=" . $error . "" );
+} else {
+    //读取数据库判断是否正确
+    $sql = "select * from t_admin where admin_name='" . $username . "' and admin_pass='" . md5 ( $password ) . "'";
+    $rs = $db->getAll ( $sql );
+    if (count ( $rs ) == 1) {       
+        $_SESSION ['admin_name'] = $rs [0] ['admin_name'];
+        $_SESSION ['admin_login'] = $rs [0] ['admin_login'];
+        Header ( "Location: frame.php" );       
+    } else {
+        $error = "4";
+        Header ( "Location: index.php?error=" . $error . "" );
+    }
+}
+?>
